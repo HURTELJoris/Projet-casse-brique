@@ -1,7 +1,6 @@
 #include "Ball.h"
-
+#include "Player.h"
 bool Ball::isRandInitialized = false;
-
 
 double Ball::randomizeAngle()
 {
@@ -70,7 +69,7 @@ void Ball::setDirection(sf::Vector2f newDirection)
 	direction = newDirection;
 }
 
-void Ball::manageCollisionWith(sf::RenderWindow& window) 
+void Ball::manageCollisionWith(sf::RenderWindow& window, Player& player)
 {
 	// Si la balle sort de l'écran (par en haut)
 	if (position.y <= 0 || position.y >= window.getSize().y - radius * 2)
@@ -84,20 +83,39 @@ void Ball::manageCollisionWith(sf::RenderWindow& window)
 		// Inverse la direction sur l'axe y :
 		direction.x *= -1;
 	}
-}
 
-void Ball::manageCollisionWith2(sf::RectangleShape& bar)
-{
-	// Si la balle sort de l'écran (par en haut)
-	if (position.y <= 0 || position.y >= bar.getSize().y - radius * 2)
-	{
+	// Détecter une collision avec le joueur
+
+	sf::FloatRect ballBounds(position.x, position.y, radius * 2, radius * 2);
+	sf::FloatRect playerBounds = player.getShape().getGlobalBounds();
+	if (ballBounds.intersects(playerBounds)) {
 		// Inverse la direction sur l'axe y :
 		direction.y *= -1;
+
+		// Ajuste la position de la balle pour éviter qu'elle ne reste coincée dans le joueur :
+		if (direction.y > 0) {
+			// si la balle se déplace vers le bas
+			position.y = playerBounds.top - radius * 2 - 1;
+		}
+		else {
+			// si la balle se déplace vers le haut
+			position.y = playerBounds.top + playerBounds.height + 1;
+		}
 	}
-	// Si la balle sort de l'écran (par les côtés)
-	if (position.x <= 0 || position.x >= bar.getSize().x - radius * 2)
-	{
-		// Inverse la direction sur l'axe y :
-		direction.x *= -1;
-	}
+}
+
+sf::Vector2f Ball::getPosition() {
+	return position;
+}
+
+float Ball::getRadius() {
+	return radius;
+}
+
+sf::CircleShape Ball::getShape() const {
+	return shape;
+}
+
+sf::Vector2f Ball::getDirection() const {
+	return direction;
 }

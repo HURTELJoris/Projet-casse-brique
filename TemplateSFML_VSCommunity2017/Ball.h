@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include "Player.h"
 class Ball
 {
 private:
@@ -22,8 +23,9 @@ public:
 	void setSpeed(float newSpeed);
 	void setPosition(sf::Vector2f newPosition);
 	void setDirection(sf::Vector2f newDirection);
-
-	void manageCollisionWith(sf::RenderWindow& window);
-	void manageCollisionWith2(sf::RectangleShape& bar);
+	sf::Vector2f getPosition();
+	float getRadius();
+	void manageCollisionWith(sf::RenderWindow& window, Player& player);
+	sf::CircleShape getShape() const;
+	sf::Vector2f getDirection() const;
 };
-
