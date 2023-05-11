@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "Ball.h"
 #include "Player.h"
+#include "brique.h"
 
 double mapValue(double X, double min, double max, double nMin, double nMax)
 {
@@ -13,6 +14,7 @@ int main(int argc, char **argv)
 {
 	Ball ball(200, 250, 10, 200);
 	Player player(550, 100, 15);
+	Brick brique(200, 250, 10, 200,3);
 
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Eloïse est un femelle");
 
@@ -58,9 +60,14 @@ int main(int argc, char **argv)
 
 
 		// détecter une collision avec le joueur
-		ball.manageCollisionWith(window, player);
+		
 
 		ball.move(ellapsedTime);
+
+		ball.manageCollisionWith(window);
+
+
+		ball.update(player);
 
 		window.clear(sf::Color::White);
 		
@@ -75,7 +82,7 @@ int main(int argc, char **argv)
 
 		player.draw(window);
 		ball.draw(window);
-
+		brique.draw(window);
 		window.display();
 	}
 

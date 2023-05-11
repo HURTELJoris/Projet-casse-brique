@@ -25,7 +25,8 @@ public:
 	void setDirection(sf::Vector2f newDirection);
 	sf::Vector2f getPosition();
 	float getRadius();
-	void manageCollisionWith(sf::RenderWindow& window, Player& player);
+	void manageCollisionWith(sf::RenderWindow& window);
 	sf::CircleShape getShape() const;
 	sf::Vector2f getDirection() const;
+	void update(Player& player);
 };
