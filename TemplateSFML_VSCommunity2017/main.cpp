@@ -14,7 +14,7 @@ int main(int argc, char **argv)
 {
 	Ball ball(200, 250, 10, 200);
 	Player player(550, 100, 15);
-	Brick brique(200, 250, 10, 200,3);
+	Brick brique(300, 200, 300, 300,3);
 
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Eloïse est un femelle");
 
@@ -68,7 +68,7 @@ int main(int argc, char **argv)
 
 
 		ball.update(player);
-
+		ball.updatebrique(brique);
 		window.clear(sf::Color::White);
 		
 		// Dessiner le fond dégradé

@@ -118,21 +118,99 @@ void Ball::update(Player& player) {
 	if (ballRect.intersects(playerRect)) {
 		// Calcule la position relative de la balle par rapport à la plateforme
 		double relativeIntersectX = position.x + radius - player.getPosition().x - player.getSize().x / 2.0;
+		double relativeIntersectY = position.y + radius - player.getPosition().y - player.getSize().y / 2.0;
 
 		// Normalise la position relative de la balle
 		double normalizedRelativeIntersectionX = relativeIntersectX / (player.getSize().x / 2.0);
+		double normalizedRelativeIntersectionY = relativeIntersectY / (player.getSize().y / 2.0);
 
 		// Calcule l'angle de rebond de la balle en radians
 		double maxAngle = 60.0; // Angle de rebond maximum en degrés
 		double angle = normalizedRelativeIntersectionX * maxAngle * M_PI / 180.0;
 
+
+		// Déterminer quelle surface de la barre a été touchée
+		if (std::abs(normalizedRelativeIntersectionX) > std::abs(normalizedRelativeIntersectionY)) {
+			// La balle a touché le côté gauche ou droit de la barre
+			if (normalizedRelativeIntersectionX > 0) {
+				// La balle a touché le côté droit de la barre
+				position.x = player.getPosition().x + player.getSize().x + radius;
+			}
+			else {
+				// La balle a touché le côté gauche de la barre
+				position.x = player.getPosition().x - 2 * radius;
+			}
+			direction.x = -direction.x;
+		}
+		else {
+			// La balle a touché le haut ou le bas de la barre
+			if (normalizedRelativeIntersectionY > 0) {
+				// La balle a touché le bas de la brique
+				position.y = player.getPosition().y + player.getSize().y + radius;
+			}
+			else {
+				// La balle a touché le haut de la barre
+				position.y = player.getPosition().y - 2 * radius;
+			}
+			direction.y = -direction.y;
+		}
+
+
 		// Déplace la balle en dehors de la plateforme
-		double overlap = ballRect.top + ballRect.height - playerRect.top;
-		position.y -= overlap;
-		direction.y = -std::abs(direction.y);
+		direction.y = -direction.y;
+		direction.x = -direction.x;
 
 		// Change la direction de la balle en fonction de l'angle de rebond
 		setAngle(angle);
+	}
+}
+
+void Ball::updatebrique(Brick& brique) {
+
+	// Créer le rectangle de la zone de collision de la balle avec la barre
+	sf::FloatRect ballRect(position.x, position.y, 2 * radius, 2 * radius);
+	sf::FloatRect briqueRect(brique.getPosition().x, brique.getPosition().y, brique.getSize().x, brique.getSize().y);
+
+	// Vérifier si la zone de collision de la balle intersecte le rectangle de la barre
+	if (ballRect.intersects(briqueRect)) {
+
+		// Calcule la position relative de la balle par rapport à la brique
+		double relativeIntersectX = position.x + radius - brique.getPosition().x - brique.getSize().x / 2.0;
+		double relativeIntersectY = position.y + radius - brique.getPosition().y - brique.getSize().y / 2.0;
+
+		// Normalise la position relative de la balle
+		double normalizedRelativeIntersectionX = relativeIntersectX / (brique.getSize().x / 2.0);
+		double normalizedRelativeIntersectionY = relativeIntersectY / (brique.getSize().y / 2.0);
+
+		// Déterminer quelle surface de la brique a été touchée
+		if (std::abs(normalizedRelativeIntersectionX) > std::abs(normalizedRelativeIntersectionY)) {
+			// La balle a touché le côté gauche ou droit de la brique
+			if (normalizedRelativeIntersectionX > 0) {
+				// La balle a touché le côté droit de la brique
+				position.x = brique.getPosition().x + brique.getSize().x + radius;
+				brique.hit();
+			}
+			else {
+				// La balle a touché le côté gauche de la brique
+				position.x = brique.getPosition().x - 2*radius;
+				brique.hit();
+			}
+			direction.x = -direction.x;
+		}
+		else {
+			// La balle a touché le haut ou le bas de la brique
+			if (normalizedRelativeIntersectionY > 0) {
+				// La balle a touché le bas de la brique
+				position.y = brique.getPosition().y + brique.getSize().y + radius;
+				brique.hit();
+			}
+			else {
+				// La balle a touché le haut de la brique
+				position.y = brique.getPosition().y - 2*radius;
+				brique.hit();
+			}
+			direction.y = -direction.y;
+		}
 	}
 }
 

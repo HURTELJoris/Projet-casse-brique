@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "Player.h"
+#include "brique.h"
 class Ball
 {
 private:
@@ -29,4 +30,5 @@ public:
 	sf::CircleShape getShape() const;
 	sf::Vector2f getDirection() const;
 	void update(Player& player);
+	void updatebrique(Brick& brique);
 };
