@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player(int y, int width_, int height_) : y(y) {
+Player::Player(int y, int width_, int height_, int life_) : y(y) {
 	position = sf::Vector2f(0, y);
 	size = sf::Vector2f(width_, height_);
 	shape.setPosition(position);
@@ -8,6 +8,7 @@ Player::Player(int y, int width_, int height_) : y(y) {
 	shape.setFillColor(sf::Color::Green);
 	this->width = width_;
 	this->height = height_;
+	this->life = life_;
 }
 
 Player::~Player() {}
@@ -55,4 +56,19 @@ int Player::getWidth() {
 
 int Player::getHeight() {
 	return height;
+}
+
+void Player::decreaseplayerlife()
+{
+	life--;
+}
+
+bool Player::IsAlive()
+{
+	return life > 0;
+}
+
+int Player::getLife()
+{
+	return life;
 }

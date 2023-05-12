@@ -1,10 +1,8 @@
 #include "Ball.h"
 #include "Player.h"
-
-#include <cstdlib>
-#include <ctime>
 #define _USE_MATH_DEFINES
 #include <math.h>
+
 
 bool Ball::isRandInitialized = false;
 
@@ -37,6 +35,14 @@ Ball::Ball(int x, int y, int radius, float speed)
 
 	setAngle(randomizeAngle());
 
+
+	
+	collisionSoundBuffer.loadFromFile("sounds/fart-with-reverb.wav");
+	collisionSound.setBuffer(collisionSoundBuffer);
+	lose1lifeSoundBuffer.loadFromFile("sounds/he-he-he-ha-clash-royale-deep-fried.wav");
+	lose1life.setBuffer(lose1lifeSoundBuffer);
+	loseSoundBuffer.loadFromFile("sounds/women-haha.wav");
+	lose.setBuffer(loseSoundBuffer);
 }
 
 Ball::~Ball()
@@ -79,7 +85,7 @@ void Ball::setDirection(sf::Vector2f newDirection)
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-void Ball::manageCollisionWith(sf::RenderWindow& window)
+void Ball::manageCollisionWith(sf::RenderWindow& window, Player& player)
 {
 	// Si la balle sort de l'écran (par en haut)
 	if (position.y <= 0)
@@ -93,7 +99,14 @@ void Ball::manageCollisionWith(sf::RenderWindow& window)
 		// Inverse la direction sur l'axe y :
 		direction.y *= -1;
 		position.y = window.getSize().y - 2 * radius;
-		int lost = true;
+		player.decreaseplayerlife();
+		
+		if (player.getLife() > 0) {
+			lose1life.play();
+		}
+		if (!player.IsAlive()) {
+			lose.play();
+		}
 	}
 	// Si la balle sort de l'écran (par les côtés)
 	if (position.x <= 0)
@@ -189,11 +202,13 @@ void Ball::updatebrique(Brick& brique) {
 				// La balle a touché le côté droit de la brique
 				position.x = brique.getPosition().x + brique.getSize().x + radius;
 				brique.hit();
+				collisionSound.play();
 			}
 			else {
 				// La balle a touché le côté gauche de la brique
 				position.x = brique.getPosition().x - 2*radius;
 				brique.hit();
+				collisionSound.play();
 			}
 			direction.x = -direction.x;
 		}
@@ -203,11 +218,13 @@ void Ball::updatebrique(Brick& brique) {
 				// La balle a touché le bas de la brique
 				position.y = brique.getPosition().y + brique.getSize().y + radius;
 				brique.hit();
+				collisionSound.play();
 			}
 			else {
 				// La balle a touché le haut de la brique
 				position.y = brique.getPosition().y - 2*radius;
 				brique.hit();
+				collisionSound.play();
 			}
 			direction.y = -direction.y;
 		}

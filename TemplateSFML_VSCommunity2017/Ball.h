@@ -3,6 +3,8 @@
 #include <SFML/Graphics.hpp>
 #include "Player.h"
 #include "brique.h"
+#include <SFML/Audio/SoundBuffer.hpp>
+#include <SFML/Audio/Sound.hpp>
 class Ball
 {
 private:
@@ -26,9 +28,15 @@ public:
 	void setDirection(sf::Vector2f newDirection);
 	sf::Vector2f getPosition();
 	float getRadius();
-	void manageCollisionWith(sf::RenderWindow& window);
+	void manageCollisionWith(sf::RenderWindow& window, Player& player);
 	sf::CircleShape getShape() const;
 	sf::Vector2f getDirection() const;
 	void update(Player& player);
 	void updatebrique(Brick& brique);
+	sf::SoundBuffer collisionSoundBuffer;
+	sf::SoundBuffer lose1lifeSoundBuffer;
+	sf::SoundBuffer loseSoundBuffer;
+	sf::Sound collisionSound;
+	sf::Sound lose1life;
+	sf::Sound lose;
 };
