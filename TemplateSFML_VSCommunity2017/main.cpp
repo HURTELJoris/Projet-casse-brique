@@ -109,9 +109,6 @@ int main(int argc, char **argv)
 
 		ball.manageCollisionWith(window, player);
 
-
-	
-
 		// détecter une collision avec le joueur
 
 		ball.update(player);
@@ -166,6 +163,11 @@ int main(int argc, char **argv)
 		// Afficher la fenêtre
 
 		window.display();
+
+		int currentlife = player.getLife();
+		if (currentlife >= 0) {
+			printf("%s","zizi" );
+		}
 	}
 
 	return 0;
